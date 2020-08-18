@@ -78,7 +78,7 @@ public class Main {
 
       ArrayList<String> output = new ArrayList<String>();
       while (rs.next()) {
-        output.add("Read from DB: " + rs.getString("product_name"));
+        output.add("Read from DB: " + rs.getString("product_name") + rs.getBlob("image"));
       }
 
       model.put("records", output);
