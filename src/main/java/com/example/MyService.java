@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -38,7 +39,7 @@ public class MyService {
     }
 
 
-    public String dbfunc (Map<String, Object> model){
+    public ResponseData dbfunc (Map<String, Object> model){
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
 
@@ -46,24 +47,33 @@ public class MyService {
             ResultSet rs = stmt.executeQuery("SELECT * FROM products");
 
             ArrayList<String> output = new ArrayList<String>();
+
+            HashMap<String, Object> message = new HashMap<>();
+            ResponseData responseData = new ResponseData(message);
+
             while (rs.next()) {
-                output.add("Read from DB: " + rs.getString("product_name"));
-                output.add("Read from DB2: " + rs.getString("image"));
+//                output.add("Read from DB: " + rs.getString("product_name"));
+//                output.add("Read from DB2: " + rs.getString("image"));
+
+                message.put("product_name",rs.getString("product_name"));
+                message.put("image",rs.getString("image"));
             }
 
-//            HashMap<String, Object> message = new HashMap<>();
-//            ResponseData responseData = new ResponseData(message);
+
 //
 //            message.put("product_name", rs.getString("product_name"));
 //            message.put("image", rs.getString("image"));
 
 
 
-            model.put("records", output);
-            return "db";
+//            model.put("records", output);
+//            return "db";
+
+
+            return responseData;
         } catch (Exception e) {
             model.put("message", e.getMessage());
-            return "error";
+            return new ResponseData(model);
         }
     }
 }
