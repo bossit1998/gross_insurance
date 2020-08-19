@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.models.ResponseData;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -45,8 +47,17 @@ public class MyService {
 
             ArrayList<String> output = new ArrayList<String>();
             while (rs.next()) {
-                output.add("Read from DB: " + rs.getString("image"));
+                output.add("Read from DB: " + rs.getString("product_name"));
+                output.add("Read from DB2: " + rs.getString("image"));
             }
+
+//            HashMap<String, Object> message = new HashMap<>();
+//            ResponseData responseData = new ResponseData(message);
+//
+//            message.put("product_name", rs.getString("product_name"));
+//            message.put("image", rs.getString("image"));
+
+
 
             model.put("records", output);
             return "db";
