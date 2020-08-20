@@ -49,16 +49,16 @@ public class Main {
   }
 
   @RequestMapping("/")
-  String index() {
-    return "index";
+  public String index() {
+    return "xaxa";
   }
 
   @Autowired
   MyService myService;
 
   @GetMapping("/db")
-  public ResponseData db(Map<String, Object> model) {
-    return myService.dbfunc(model);
+  public ResponseData db() {
+    return myService.dbfunc();
   }
 
 }

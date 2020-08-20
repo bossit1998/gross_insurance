@@ -39,14 +39,14 @@ public class MyService {
     }
 
 
-    public ResponseData dbfunc (Map<String, Object> model){
+    public ResponseData dbfunc (){
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
 
 //      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
             ResultSet rs = stmt.executeQuery("SELECT * FROM products");
 
-            ArrayList<String> output = new ArrayList<String>();
+//            ArrayList<String> output = new ArrayList<String>();
 
             HashMap<String, Object> message = new HashMap<>();
             ResponseData responseData = new ResponseData(message);
@@ -72,8 +72,9 @@ public class MyService {
 
             return responseData;
         } catch (Exception e) {
-            model.put("message", e.getMessage());
-            return new ResponseData(model);
+            HashMap<String, Object> message = new HashMap<>();
+            message.put("message", e.getMessage());
+            return new ResponseData(message);
         }
     }
 }
