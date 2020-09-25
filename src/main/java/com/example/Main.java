@@ -45,12 +45,12 @@ public class Main {
     return userService.get_products();
   }
 
-  @Autowired
-  MyService myService;
-
-  @GetMapping("/db")
-  public ResponseData db() {
-    return myService.dbfunc();
-  }
+//  @Autowired
+//  MyService myService;
+//
+//  @GetMapping("/db")
+//  public ResponseData db() {
+//    return myService.dbfunc();
+//  }
 
 }

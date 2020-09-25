@@ -22,13 +22,13 @@ public class UserController {
     }
 
 
-    @GetMapping("checkdb")
-//    public Map<String, Object> getProducts() {
-//        return UserService.get_products();
+//    @GetMapping("checkdb")
+////    public Map<String, Object> getProducts() {
+////        return UserService.get_products();
+////    }
+//    public Map<String, Object> checkdb() {
+//        return UserService.checkdb();
 //    }
-    public Map<String, Object> checkdb() {
-        return UserService.checkdb();
-    }
 
 //    @PostMapping("/delete/month")
 //    public ResponseData deleteFromStartMonth(@RequestBody String baseModel) {
