@@ -44,7 +44,7 @@ public class MyService {
             Statement stmt = connection.createStatement();
 
 //      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM products");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM tashman.products");
 
 //            ArrayList<String> output = new ArrayList<String>();
 
@@ -54,7 +54,7 @@ public class MyService {
             while (rs.next()) {
 //                output.add("Read from DB: " + rs.getString("product_name"));
 //                output.add("Read from DB2: " + rs.getString("image"));
- //cdc
+
                 message.put("product_name",rs.getString("product_name"));
                 message.put("image",rs.getString("image"));
             }
