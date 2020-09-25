@@ -14,8 +14,20 @@ import java.util.Map;
 public class UserController {
 
     @GetMapping("products")
+//    public Map<String, Object> getProducts() {
+//        return UserService.get_products();
+//    }
     public Map<String, Object> getProducts() {
         return UserService.get_products();
+    }
+
+
+    @GetMapping("checkdb")
+//    public Map<String, Object> getProducts() {
+//        return UserService.get_products();
+//    }
+    public Map<String, Object> checkdb() {
+        return UserService.checkdb();
     }
 
 //    @PostMapping("/delete/month")

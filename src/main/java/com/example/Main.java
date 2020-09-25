@@ -42,8 +42,7 @@ public class Main {
 
   @RequestMapping("/")
   public Map<String, Object> index() {
-//    return "xaxa";
-  return userService.get_products();
+    return userService.get_products();
   }
 
   @Autowired
