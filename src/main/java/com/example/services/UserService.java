@@ -16,10 +16,12 @@ public class UserService {
     @Autowired
     private UserService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        System.out.println("connected");
     }
 
     public static List<Map<String, Object>> checkdb() {
         return jdbcTemplate.queryForList("SELECT * FROM gross.customers");
+//        return jdbcTemplate.queryForList("select * from information_schema.tables");
     }
 
     public static Map<String, Object> getProducts() {
