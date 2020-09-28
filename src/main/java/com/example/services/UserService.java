@@ -20,8 +20,10 @@ public class UserService {
     }
 
     public static List<Map<String, Object>> checkdb() {
-        return jdbcTemplate.queryForList("SELECT * FROM gross.customers");
+//        return jdbcTemplate.queryForList("SELECT * FROM gross.customers");
 //        return jdbcTemplate.queryForList("select * from information_schema.tables");
+
+        return null;
     }
 
     public static Map<String, Object> getProducts() {
