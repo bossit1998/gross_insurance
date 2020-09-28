@@ -13,8 +13,7 @@ public class SignUpModel extends SignInModel{
     private String name;
     private String surName;
     private String email;
+    private String userName;
+    private String password;
     private String phoneNumber;
-    private String region;
-    private String companyName;
-    private String privilege;
 }

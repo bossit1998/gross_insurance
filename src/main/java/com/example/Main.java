@@ -30,27 +30,7 @@ import java.util.Map;
 @Controller
 @SpringBootApplication
 public class Main {
-
-
-
   public static void main(String[] args) throws Exception {
     SpringApplication.run(Main.class, args);
   }
-
-  @Autowired
-  UserService userService;
-
-  @RequestMapping("/")
-  public Map<String, Object> index() {
-    return userService.get_products();
-  }
-
-//  @Autowired
-//  MyService myService;
-//
-//  @GetMapping("/db")
-//  public ResponseData db() {
-//    return myService.dbfunc();
-//  }
-
 }
