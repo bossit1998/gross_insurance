@@ -21,7 +21,7 @@ public class UserController {
         return UserService.get_products();
     }
 
-
+//.
     @GetMapping("checkdb")
     public Map<String, Object> checkdb() {
         return UserService.checkdb();
