@@ -27,3 +27,21 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 }
+
+
+//reviews
+//TODO get_reviews done
+//TODO post_reviews
+
+//TODO sign_in
+//TODO sign_up
+
+//bonds
+//TODO get_bonds
+//TODO post_bonds
+
+//user
+//TODO get_user_info
+//TODO post_user_info
+
+

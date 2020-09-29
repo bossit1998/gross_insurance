@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignInModel {
-    private String email;
-    private String password;
+public class ReviewModel {
+    private String reviewer_username;
+    private String reviewer_mail;
+    private String reviewer_comment;
 }
