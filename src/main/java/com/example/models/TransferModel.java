@@ -14,7 +14,7 @@ public class TransferModel {
     private String buyer_balance_number;
     private String bond_series;
     private String bond_number;
-    float money_amount;
+    private float money_amount;
     private String transfer_dat;
-    boolean transfer_approved;
+    private boolean transfer_approved;
 }

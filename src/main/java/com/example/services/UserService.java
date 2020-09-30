@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class UserService {
 
-    private static JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     private UserService(JdbcTemplate jdbcTemplate) {
@@ -34,9 +34,6 @@ public class UserService {
 
         return map;
     }
-
-
-
 
     // get reviews
     public ResponseData getReviews() {

@@ -3,8 +3,6 @@ package com.example.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Collections;
-
 @Data
 @AllArgsConstructor
 public class ResponseData {
