@@ -1,10 +1,7 @@
 package com.example.rest;
 
 
-import com.example.models.ResponseData;
-import com.example.models.ReviewModel;
-import com.example.models.SignInModel;
-import com.example.models.SignUpModel;
+import com.example.models.*;
 import com.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +34,8 @@ public class UserController {
         return userService.getReviews();
     }
     @PostMapping("/reviews")
-    public ResponseData postReviews(@RequestBody ReviewModel reviewModel) {
-        return userService.postReviews(reviewModel);
+    public ResponseData insertReviews(@RequestBody ReviewModel reviewModel) {
+        return userService.insertReviews(reviewModel);
     }
 
     // sign up
@@ -51,6 +48,18 @@ public class UserController {
     @PostMapping("/sign-in")
     public ResponseData signIn(@RequestBody SignInModel signInModel) {
         return userService.signIn(signInModel);
+    }
+
+    // get my bonds
+    @PostMapping("/my-bonds")
+    public ResponseData getBonds(@RequestBody UserRequestModel userRequestModel) {
+        return userService.getMyBonds(userRequestModel);
+    }
+
+    // make transaction
+    @PostMapping("/make-transaction")
+    public ResponseData makeTransfer(@RequestBody TransferModel transferModel) {
+        return userService.makeTransfer(transferModel);
     }
 
 }

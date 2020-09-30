@@ -31,10 +31,10 @@ public class Main {
 
 //reviews
 //TODO get_reviews done
-//TODO post_reviews
+//TODO post_reviews done
 
-//TODO sign_in
-//TODO sign_up
+//TODO sign_in done
+//TODO sign_up done
 
 //bonds
 //TODO get_bonds

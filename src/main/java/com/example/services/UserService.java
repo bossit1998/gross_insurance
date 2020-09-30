@@ -1,9 +1,6 @@
 package com.example.services;
 
-import com.example.models.ResponseData;
-import com.example.models.ReviewModel;
-import com.example.models.SignInModel;
-import com.example.models.SignUpModel;
+import com.example.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -56,7 +53,7 @@ public class UserService {
     }
 
     // post reviews
-    public ResponseData postReviews(ReviewModel reviewModel) {
+    public ResponseData insertReviews(ReviewModel reviewModel) {
         String sql_post_reviews = "INSERT INTO gross.reviews (review_id, reviewer_username, reviewer_comment, review_date, reviewer_mail) VALUES (DEFAULT, ?, ?, DEFAULT, ?)";
 
         int result;
@@ -101,5 +98,44 @@ public class UserService {
             System.out.println(e.getStackTrace());
             return new ResponseData(1,"error","undefined");
         }
+    }
+
+    // get owner bonds
+    public ResponseData getMyBonds(UserRequestModel userRequestModel) {
+        String sql_get_my_bonds = "select " +
+                "       b.bond_series, " +
+                "       b.bond_number, " +
+                "       b.bond_absolute_value, " +
+                "       b.bond_percent, " +
+                "       b.bond_life_time, " +
+                "       to_char(b.bond_start_date,'DD.MM.YYYY') as bond_start_date, " +
+                "       to_char(b.bond_end_date,'DD.MM.YYYY') as bond_end_date, " +
+                "       o.buy_price, " +
+                "       to_char(o.buy_date,'DD.MM.YYYY') as buy_date, " +
+                "       o.owner_account " +
+                "from gross.owns o natural join gross.bonds b " +
+                "where o.bond_number=b.bond_number " +
+                "    and o.bond_series=b.bond_series " +
+                "    and o.owner_account = ?";
+
+        List<Map<String, Object>> result;
+        try {
+            result = jdbcTemplate.queryForList(sql_get_my_bonds, userRequestModel.getCustomer_account_number());
+            if (result.size() > 0) {
+                return new ResponseData(0,"undefined",result);
+            }
+            else {
+                return new ResponseData(1,"error","undefined");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            return new ResponseData(1,"error","undefined");
+        }
+    }
+
+    // make transfer
+    public ResponseData makeTransfer(TransferModel transferModel) {
+        String sql_make_transfer = "";
+        return null;
     }
 }
