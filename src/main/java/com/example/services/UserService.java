@@ -20,14 +20,14 @@ public class UserService {
         System.out.println("connected");
     }
 
-    public static List<Map<String, Object>> checkdb() {
+    public List<Map<String, Object>> checkdb() {
         return jdbcTemplate.queryForList("SELECT * FROM gross.customers");
 //        return jdbcTemplate.queryForList("select * from information_schema.tables");
 
 //        return null;
     }
 
-    public static Map<String, Object> getProducts() {
+    public Map<String, Object> getProducts() {
         HashMap map = new HashMap();
         map.put("name", "abdul");
         map.put("surname", "aaaab");
