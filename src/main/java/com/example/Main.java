@@ -42,4 +42,8 @@ public class Main {
 //TODO get_user_info
 //TODO post_user_info
 
+//news
+//TODO get_news
+//TODO post_news
+
 

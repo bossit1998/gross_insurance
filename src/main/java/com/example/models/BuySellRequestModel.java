@@ -7,14 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransferModel {
-    private String seller_account_number;
-    private String seller_balance_number;
-    private String buyer_account_number;
-    private String buyer_balance_number;
+public class BuySellRequestModel {
+    private String requester_account_number;
     private String bond_series;
     private String bond_number;
     private float money_amount;
-    private String transfer_dat;
+    private String request_made_date;
+    private int transfer_type;
     private boolean transfer_approved;
 }
