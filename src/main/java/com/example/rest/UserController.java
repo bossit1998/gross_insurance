@@ -3,9 +3,10 @@ package com.example.rest;
 
 import com.example.models.*;
 import com.example.services.UserService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
 
 @RestController
 public class UserController {
@@ -14,9 +15,14 @@ public class UserController {
     UserService userService;
 
     // sign up
-    @PostMapping("/sign-up")
-    public ResponseData signUp(@RequestBody SignUpModel signUpModel) {
-        return userService.signUp(signUpModel);
+    @PostMapping("/sign-up-confirm-email")
+    public ResponseData signUp(@RequestBody SignUpEmailConfirmationModel signUpEmailConfirmationModel) throws MessagingException {
+        return userService.signUpConfirmEmail(signUpEmailConfirmationModel);
+    }
+
+    @PostMapping("/sign-up-email-confirmed")
+    public ResponseData signUp(@RequestBody SignUpEmailConfirmedModel signUpEmailConfirmedModel) {
+        return userService.signUpEmailConfirmed(signUpEmailConfirmedModel);
     }
 
     // sign in

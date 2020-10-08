@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class GeneralService {
@@ -29,7 +30,6 @@ public class GeneralService {
         HashMap map = new HashMap();
         map.put("name", "abdul");
         map.put("surname", "aaaab");
-
         return map;
     }
 
