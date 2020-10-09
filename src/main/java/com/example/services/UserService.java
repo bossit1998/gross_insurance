@@ -41,7 +41,7 @@ public class UserService {
 //            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
-            return new ResponseEntity(new ResponseData(0,"undefined","ok"), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,"undefined",generated_code_for_customer), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
             return new ResponseEntity(new ResponseData(1,"Email already exist","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,7 +49,7 @@ public class UserService {
         }
     }
 
-    public ResponseData signUpEmailConfirmed(SignUpEmailConfirmedModel signUpEmailConfirmedModel) {
+    public ResponseEntity<ResponseData> signUpEmailConfirmed(SignUpEmailConfirmedModel signUpEmailConfirmedModel) {
         String sql_get_user_info_from_verification_code = "select customer_mail, customer_email_verification_code, customer_register_date from gross.customers where customer_email_verification_code=?";
 
 //        String sql_sign_up = "INSERT INTO gross.customers (customer_id, customer_name, customer_surname, customer_password, customer_account_number, customer_balance_number, customer_balance, customer_phone_number, customer_mail, customer_privilege, customer_register_date) " +
@@ -88,20 +88,20 @@ public class UserService {
                     }
                 });
 
-                return responseData;
+                return new ResponseEntity(responseData, HttpStatus.OK);
             }
             else
             {
-                return responseData;
+                return new ResponseEntity(responseData, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseData(1, "error", "undefined");
+            return new ResponseEntity(new ResponseData(1, "error", "undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // sign in
-    public ResponseData signIn(SignInModel signInModel) {
+    public ResponseEntity<ResponseData> signIn(SignInModel signInModel) {
         String sql_sign_in = "select count(*) from gross.customers where customer_mail=? and customer_password=? and customer_account_verified=true";
 
         String result;
@@ -112,13 +112,14 @@ public class UserService {
                 response_object.put("message","ok");
                 response_object.put("mail",signInModel.getCustomer_email());
                 response_object.put("token","here will be token");
-                return new ResponseData(0, "undefined", response_object);
+                return new ResponseEntity(new ResponseData(0, "undefined", response_object), HttpStatus.OK);
+
             } else {
-                return new ResponseData(1, "Incorrect username or password", "undefined");
+                return new ResponseEntity(new ResponseData(1,"Incorrect username or password","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseData(1, "error", "undefined");
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

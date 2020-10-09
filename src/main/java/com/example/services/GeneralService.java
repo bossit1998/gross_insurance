@@ -76,4 +76,8 @@ public class GeneralService {
             return new ResponseData(1,"error","undefined");
         }
     }
+
+    public List<Map<String, Object>> delete_mail(String mail) {
+        return null;
+    }
 }

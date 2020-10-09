@@ -22,13 +22,13 @@ public class UserController {
     }
 
     @PostMapping("/sign-up-email-confirmed")
-    public ResponseData signUp(@RequestBody SignUpEmailConfirmedModel signUpEmailConfirmedModel) {
+    public ResponseEntity<ResponseData> signUp(@RequestBody SignUpEmailConfirmedModel signUpEmailConfirmedModel) {
         return userService.signUpEmailConfirmed(signUpEmailConfirmedModel);
     }
 
     // sign in
     @PostMapping("/sign-in")
-    public ResponseData signIn(@RequestBody SignInModel signInModel) {
+    public ResponseEntity<ResponseData> signIn(@RequestBody SignInModel signInModel) {
         return userService.signIn(signInModel);
     }
 

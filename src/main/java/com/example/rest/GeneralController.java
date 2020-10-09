@@ -30,6 +30,11 @@ public class GeneralController {
         return generalService.checkdb();
     }
 
+    @GetMapping("/delete_mail")
+    public List<Map<String, Object>> checkdb(String mail) {
+        return generalService.delete_mail(mail);
+    }
+
 
     //reviews
     @GetMapping("/reviews")
