@@ -4,6 +4,7 @@ import com.example.models.ResponseData;
 import com.example.models.ReviewModel;
 import com.example.services.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +33,7 @@ public class GeneralController {
 
     //reviews
     @GetMapping("/reviews")
-    public ResponseData getReviews() {
+    public ResponseEntity getReviews() {
         return generalService.getReviews();
     }
     @PostMapping("/reviews")
