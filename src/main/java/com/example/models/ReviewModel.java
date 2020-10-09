@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewModel {
-    private String reviewer_username;
+    private String reviewer_nickname;
     private String reviewer_mail;
     private String reviewer_comment;
 }

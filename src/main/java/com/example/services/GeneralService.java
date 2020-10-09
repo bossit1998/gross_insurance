@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Service
 public class GeneralService {
@@ -37,29 +36,29 @@ public class GeneralService {
 
     // get reviews
     public ResponseEntity getReviews() {
-        String sql_get_reviews = "Select review_id, reviewer_account_number, reviewer_comment from gross.reviews";
+        String sql_get_reviews = "Select review_id, reviewer_nickname, reviewer_comment from gross.reviews";
 
         List<Map<String, Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_reviews);
 //            return new ResponseData(0,"undefined",result);
-            return new ResponseEntity(result, HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,"undefined",result), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
 //            return new ResponseData(1,"error","undefined");
-            return new ResponseEntity("undefined", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
 
     // post reviews
     public ResponseData insertReviews(ReviewModel reviewModel) {
-        String sql_post_reviews = "INSERT INTO gross.reviews (review_id, reviewer_account_number, reviewer_comment, review_date, reviewer_mail) " +
+        String sql_post_reviews = "INSERT INTO gross.reviews (review_id, reviewer_nickname, reviewer_comment, review_date, reviewer_mail) " +
                 "VALUES (DEFAULT, ?, ?, DEFAULT, ?)";
 
         int result;
         try {
-            result = jdbcTemplate.update(sql_post_reviews,reviewModel.getReviewer_username(),reviewModel.getReviewer_comment(),reviewModel.getReviewer_mail());
+            result = jdbcTemplate.update(sql_post_reviews,reviewModel.getReviewer_nickname(),reviewModel.getReviewer_comment(),reviewModel.getReviewer_mail());
             return new ResponseData(0,"undefined","ok");
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
