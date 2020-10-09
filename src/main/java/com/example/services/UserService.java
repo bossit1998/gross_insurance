@@ -38,7 +38,7 @@ public class UserService {
             result = jdbcTemplate.update(sql_insert_email_verification_code,signUpEmailConfirmationModel.getCustomer_name(),signUpEmailConfirmationModel.getCustomer_surname(),signUpEmailConfirmationModel.getCustomer_email(),generated_code_for_customer);
 
             System.out.println("Sending Email...");
-            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
+//            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
             return new ResponseEntity(new ResponseData(0,"undefined","ok"), HttpStatus.OK);
