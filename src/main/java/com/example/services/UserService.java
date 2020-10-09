@@ -2,6 +2,8 @@ package com.example.services;
 
 import com.example.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class UserService {
     }
 
     // sign up - 1st part
-    public ResponseData signUpConfirmEmail(SignUpEmailConfirmationModel signUpEmailConfirmationModel) throws MessagingException {
+    public ResponseEntity<ResponseData> signUpConfirmEmail(SignUpEmailConfirmationModel signUpEmailConfirmationModel) throws MessagingException {
         String sql_insert_email_verification_code="INSERT INTO gross.customers (customer_id, customer_name, customer_surname, customer_password, customer_account_number, customer_mail, customer_register_date, customer_email_verification_code, customer_account_verified) " +
                 "VALUES (DEFAULT, ?, ?, 'not_set', 'not_set', ?, DEFAULT, ?, DEFAULT)";
         String generated_code_for_customer = mailServices.getRandomNumberString();
@@ -39,10 +41,11 @@ public class UserService {
             String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
-            return new ResponseData(0,"undefined",result);
+            return new ResponseEntity(new ResponseData(0,"undefined","ok"), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseData(1,"Email already exist","undefined");
+            return new ResponseEntity(new ResponseData(1,"Email already exist","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 

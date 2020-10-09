@@ -33,11 +33,11 @@ public class GeneralController {
 
     //reviews
     @GetMapping("/reviews")
-    public ResponseEntity getReviews() {
+    public ResponseEntity<ResponseData> getReviews() {
         return generalService.getReviews();
     }
     @PostMapping("/reviews")
-    public ResponseData insertReviews(@RequestBody ReviewModel reviewModel) {
+    public ResponseEntity<ResponseData> insertReviews(@RequestBody ReviewModel reviewModel) {
         return generalService.insertReviews(reviewModel);
     }
 
