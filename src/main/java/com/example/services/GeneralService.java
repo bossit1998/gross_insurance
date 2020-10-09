@@ -3,6 +3,8 @@ package com.example.services;
 import com.example.models.ResponseData;
 import com.example.models.ReviewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +36,19 @@ public class GeneralService {
     }
 
     // get reviews
-    public ResponseData getReviews() {
+    public ResponseEntity getReviews() {
         String sql_get_reviews = "Select review_id, reviewer_account_number, reviewer_comment from gross.reviews";
 
         List<Map<String, Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_reviews);
-            return new ResponseData(0,"undefined",result);
+//            return new ResponseData(0,"undefined",result);
+            return new ResponseEntity(result, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseData(1,"error","undefined");
+//            return new ResponseData(1,"error","undefined");
+            return new ResponseEntity("undefined", HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 
