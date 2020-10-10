@@ -115,7 +115,7 @@ public class UserService {
                 response_object.put("message","ok");
                 response_object.put("mail",signInModel.getCustomer_email());
                 response_object.put("token","here will be token");
-                return new ResponseEntity(new ResponseData(0, "undefined", response_object), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, response_object), HttpStatus.OK);
 
             } else {
                 return new ResponseEntity(new ResponseData(1,"Incorrect username or password","undefined"), HttpStatus.OK);
