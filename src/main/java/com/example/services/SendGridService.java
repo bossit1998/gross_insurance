@@ -8,17 +8,18 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Random;
 
+//import javax.mail.MessagingException;
+
 @Service
 public class SendGridService {
-    @Value("${app.sendgrid.key}")
-    private String appKey;
+
+//    @Value("${SENDGRID_API_KEY}")
+//    private String appKey;
 
 
     public String getRandomNumberString() {
@@ -32,7 +33,7 @@ public class SendGridService {
     }
 
 
-    public String sendEmailWithCode(SignUpEmailConfirmationModel signUpEmailConfirmationModel, String my_gen_code) throws MessagingException {
+    public String sendEmailWithCode(SignUpEmailConfirmationModel signUpEmailConfirmationModel, String my_gen_code) {
         Email from = new Email("GrossInsurance@mail.com");
         Email to = new Email(signUpEmailConfirmationModel.getCustomer_email());
         String customer_full_name=signUpEmailConfirmationModel.getCustomer_name()+" "+signUpEmailConfirmationModel.getCustomer_surname();
@@ -55,7 +56,7 @@ public class SendGridService {
 
         Mail mail = new Mail(from,subject,to,content);
 
-        SendGrid sg = new SendGrid(appKey);
+        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
         Request request = new Request();
 
         try {
@@ -78,7 +79,7 @@ public class SendGridService {
         Content content = new Content("text/plain","and easy");
         Mail mail = new Mail(from,subject,to,content);
 
-        SendGrid sg = new SendGrid(appKey);
+        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
         Request request = new Request();
 
         try {

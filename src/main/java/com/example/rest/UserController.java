@@ -5,9 +5,9 @@ import com.example.models.*;
 import com.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
@@ -17,7 +17,7 @@ public class UserController {
 
     // sign up
     @PostMapping("/sign-up-confirm-email")
-    public ResponseEntity<ResponseData> signUp(@RequestBody SignUpEmailConfirmationModel signUpEmailConfirmationModel) throws MessagingException {
+    public ResponseEntity<ResponseData> signUp(@RequestBody SignUpEmailConfirmationModel signUpEmailConfirmationModel) {
         return userService.signUpConfirmEmail(signUpEmailConfirmationModel);
     }
 

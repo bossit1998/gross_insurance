@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +16,8 @@ import java.util.Map;
 @Service
 public class UserService {
 
-    @Autowired
-    MailServices mailServices;
+//    @Autowired
+//    MailServices mailServices;
 
     @Autowired
     SendGridService sendGridService;
@@ -31,10 +30,10 @@ public class UserService {
     }
 
     // sign up - 1st part
-    public ResponseEntity<ResponseData> signUpConfirmEmail(SignUpEmailConfirmationModel signUpEmailConfirmationModel) throws MessagingException {
+    public ResponseEntity<ResponseData> signUpConfirmEmail(SignUpEmailConfirmationModel signUpEmailConfirmationModel) {
         String sql_insert_email_verification_code="INSERT INTO gross.customers (customer_id, customer_name, customer_surname, customer_password, customer_account_number, customer_mail, customer_register_date, customer_email_verification_code, customer_account_verified) " +
                 "VALUES (DEFAULT, ?, ?, 'not_set', 'not_set', ?, DEFAULT, ?, DEFAULT)";
-        String generated_code_for_customer = mailServices.getRandomNumberString();
+        String generated_code_for_customer = sendGridService.getRandomNumberString();
 
         int result;
         try {
@@ -45,7 +44,7 @@ public class UserService {
             String sent_verification_code = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
-            return new ResponseEntity(new ResponseData(0,"undefined",generated_code_for_customer), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,"undefined",sent_verification_code), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
             return new ResponseEntity(new ResponseData(1,"Email already exist","undefined"), HttpStatus.OK);
