@@ -43,8 +43,8 @@ public class GeneralService {
             result = jdbcTemplate.queryForList(sql_get_reviews);
             return new ResponseEntity(new ResponseData(0,"undefined",result), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.OK);
 
         }
     }
@@ -60,7 +60,7 @@ public class GeneralService {
             return new ResponseEntity(new ResponseData(0,"undefined","ok"), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.OK);
         }
     }
 
@@ -77,7 +77,4 @@ public class GeneralService {
         }
     }
 
-    public List<Map<String, Object>> delete_mail(String mail) {
-        return null;
-    }
 }

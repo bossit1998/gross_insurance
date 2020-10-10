@@ -20,6 +20,9 @@ public class UserService {
     @Autowired
     MailServices mailServices;
 
+    @Autowired
+    SendGridService sendGridService;
+
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     private UserService(JdbcTemplate jdbcTemplate) {
@@ -39,12 +42,13 @@ public class UserService {
 
             System.out.println("Sending Email...");
 //            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
+            String sent_verification_code = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
             return new ResponseEntity(new ResponseData(0,"undefined",generated_code_for_customer), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Email already exist","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseData(1,"Email already exist","undefined"), HttpStatus.OK);
 
         }
     }
@@ -92,11 +96,11 @@ public class UserService {
             }
             else
             {
-                return new ResponseEntity(responseData, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity(responseData, HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1, "error", "undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseData(1, "error", "undefined"), HttpStatus.OK);
         }
     }
 
@@ -115,11 +119,11 @@ public class UserService {
                 return new ResponseEntity(new ResponseData(0, "undefined", response_object), HttpStatus.OK);
 
             } else {
-                return new ResponseEntity(new ResponseData(1,"Incorrect username or password","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity(new ResponseData(1,"Incorrect username or password","undefined"), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.OK);
         }
     }
 
