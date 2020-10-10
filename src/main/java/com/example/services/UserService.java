@@ -118,11 +118,11 @@ public class UserService {
                 return new ResponseEntity(new ResponseData(0, null, response_object), HttpStatus.OK);
 
             } else {
-                return new ResponseEntity(new ResponseData(1,"Incorrect username or password","undefined"), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(1,"Incorrect username or password",null), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
         }
     }
 
