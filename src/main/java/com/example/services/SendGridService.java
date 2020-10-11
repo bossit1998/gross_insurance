@@ -8,6 +8,9 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -77,6 +80,10 @@ public class SendGridService {
 //        System.out.println(System.getenv(s2));
 
 
+//        System.out.println(Environment.getProperty("SENDGRID_API_KEY"));
+        System.out.println(System.getenv("SENDGRID_API_KEY"));
+//        System.out.println(my.api.key);
+
 
 
 //        System.out.println(env.getProperty("SENDGRID_API_KEY"));
@@ -91,7 +98,7 @@ public class SendGridService {
             Response response = sg.api((request));
             return my_gen_code;
         } catch (IOException e) {
-            return e.getMessage();
+            return e.getMessage()+e.getCause();
         }
     }
 
