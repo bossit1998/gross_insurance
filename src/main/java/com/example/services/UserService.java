@@ -191,6 +191,7 @@ public class UserService {
         }
     }
 
+    // get the bonds of the user which is being sold in dashboard
     public ResponseEntity<ResponseData> getMySellingBondsDashboard(UserRequestModel userRequestModel) {
         String sql_get_my_selling_bonds = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent " +
                 "   from  gross.owns o  join gross.transfer_requests t on t.requester_account_number=o.owner_account and t.bond_series=o.bond_series and t.bond_number=o.bond_number " +
@@ -212,6 +213,7 @@ public class UserService {
         }
     }
 
+    // get the bonds of the user which is being sold in popup
     public ResponseEntity<ResponseData> getMySellingBondsFull(BondInfoModel bondInfoModel) {
         String sql_get_my_selling_bonds_full = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent, b.bond_start_date, b.bond_end_date, b.bond_life_time, t.money_amount as price, to_char(t.request_made_date, 'DD.MM.YYYY') as sell_request_date " +
                 "   from  gross.owns o  join gross.transfer_requests t on t.requester_account_number=o.owner_account and t.bond_series=o.bond_series and t.bond_number=o.bond_number " +
@@ -223,7 +225,7 @@ public class UserService {
         try {
             result = jdbcTemplate.queryForList(sql_get_my_selling_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number(),bondInfoModel.getCustomer_account_number());
             if (result.size() > 0) {
-                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, result.get(0)), HttpStatus.OK);
             } else {
                 return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
             }
@@ -233,15 +235,16 @@ public class UserService {
         }
     }
 
+    // get the bonds of the user which is being bought in dashboard
     public ResponseEntity<ResponseData> getMyBuyingBondsDashboard(UserRequestModel userRequestModel) {
-        String sql_get_my_selling_bonds = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent " +
+        String sql_get_my_buying_bonds = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent " +
                 "   from  gross.transfer_requests t join gross.bonds b on b.bond_series=t.bond_series and b.bond_number=t.bond_number " +
                 "   where t.transfer_type='buy' and t.transfer_approved=false and b.bond_in_market=true and t.requester_account_number=?";
 
         List<Map<String, Object>> result;
 
         try {
-            result = jdbcTemplate.queryForList(sql_get_my_selling_bonds,userRequestModel.getCustomer_account_number());
+            result = jdbcTemplate.queryForList(sql_get_my_buying_bonds,userRequestModel.getCustomer_account_number());
             if (result.size() > 0) {
                 return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
@@ -253,8 +256,25 @@ public class UserService {
         }
     }
 
+    // get the bonds of the user which is being bought in popup
     public ResponseEntity<ResponseData> getMyBuyingBondsFull(BondInfoModel bondInfoModel) {
-        return null;
+        String sql_get_my_buying_bonds_full = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent, b.bond_start_date, b.bond_end_date, b.bond_life_time, t.money_amount as price, to_char(t.request_made_date, 'DD.MM.YYYY') as sell_request_date " +
+                "   from  gross.transfer_requests t join gross.bonds b on b.bond_series=t.bond_series and b.bond_number=t.bond_number " +
+                "   where t.transfer_type='buy' and t.transfer_approved=false and b.bond_in_market=true and b.bond_series=? and b.bond_number=? and t.requester_account_number=?";
+
+        List<Map<String, Object>> result;
+
+        try {
+            result = jdbcTemplate.queryForList(sql_get_my_buying_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number(),bondInfoModel.getCustomer_account_number());
+            if (result.size() > 0) {
+                return new ResponseEntity(new ResponseData(0, null, result.get(0)), HttpStatus.OK);
+            } else {
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
+        }
     }
 
     // get the bonds which are being sold in dashboard
@@ -311,7 +331,7 @@ public class UserService {
         try {
             result = jdbcTemplate.queryForList(sql_get_selling_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number());
             if (result.size() > 0) {
-                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, result.get(0)), HttpStatus.OK);
             } else {
                 return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
             }
@@ -392,7 +412,7 @@ public class UserService {
         List<Map<String,Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_bond_details, firstTransferModel.getBond_series(), firstTransferModel.getBond_number());
-            return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0, null, result.get(0)), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
@@ -405,7 +425,7 @@ public class UserService {
         List<Map<String,Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_customer_details, userRequestModel.getCustomer_account_number());
-            return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0, null, result.get(0)), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
@@ -422,6 +442,7 @@ public class UserService {
         String sql_change_bond_market_status = "UPDATE gross.bonds SET bond_in_market = ? WHERE bond_series = ? AND bond_number = ?";
         String sql_update_owns = "UPDATE gross.owns SET sell_price = ?, sell_date = now(), previous_owner_account = ?, owner_account = ? WHERE owner_account = ? AND bond_series = ? AND bond_number = ?";
         String sql_update_user = "UPDATE gross.customers SET customer_balance = customer_balance + ? WHERE  customer_account_number = ?";
+        String sql_update_transfer_approved_status = "UPDATE gross.transfer_requests SET transfer_approved = true WHERE bond_series = ? and bond_number = ? and transfer_approved = false";
 
         List<Map<String, Object>> seller_data = null;
         List<Map<String, Object>> buyer_data = null;
@@ -430,9 +451,9 @@ public class UserService {
         String result_of_update_owns;
         String result_of_update_seller;
         String result_of_update_buyer;
+        String result_of_transfer_approved_status;
 
         try {
-
             seller_data = jdbcTemplate.queryForList(sql_get_seller_details,transferApprovedModel.getBond_series(),transferApprovedModel.getBond_number());
             final String[] sellerAccountNumber = new String[1];
             final Double[] sellerBalance = new Double[1];
@@ -456,21 +477,21 @@ public class UserService {
             result_of_update_owns = String.valueOf(jdbcTemplate.update(sql_update_owns,moneyAmount[0], sellerAccountNumber[0], buyerAccountNumber[0], sellerAccountNumber[0], transferApprovedModel.getBond_series(), transferApprovedModel.getBond_number()));
             result_of_update_seller = String.valueOf(jdbcTemplate.update(sql_update_user,moneyAmount[0], sellerAccountNumber[0]));
             result_of_update_buyer = String.valueOf(jdbcTemplate.update(sql_update_user,-moneyAmount[0], buyerAccountNumber[0]));
+            result_of_transfer_approved_status = String.valueOf(jdbcTemplate.update(sql_update_transfer_approved_status,transferApprovedModel.getBond_series(), transferApprovedModel.getBond_number()));
 
-
-//            if (Integer.valueOf(result_of_transfer) > 0 && Integer.valueOf(result_of_update_owns) > 0 && Integer.valueOf(result_of_update_seller) > 0 && Integer.valueOf(result_of_update_buyer) > 0) {
-            if (Integer.valueOf(result_of_transfer) > 0 && Integer.valueOf(result_of_update_owns) > 0 && Integer.valueOf(result_of_update_seller) > 0 && Integer.valueOf(result_of_update_buyer) > 0) {
+            if (Integer.valueOf(result_of_transfer) > 0 && Integer.valueOf(result_of_bond_market_status_change) > 0 && Integer.valueOf(result_of_update_owns) > 0 && Integer.valueOf(result_of_update_seller) > 0 && Integer.valueOf(result_of_update_buyer) > 0 && Integer.valueOf(result_of_transfer_approved_status) > 0) {
                 HashMap<String,String> final_result = null;
                 final_result.put("transfer",result_of_transfer);
                 final_result.put("status",result_of_bond_market_status_change);
                 final_result.put("owns",result_of_update_owns);
                 final_result.put("seller",result_of_update_seller);
                 final_result.put("buyer",result_of_update_buyer);
+                final_result.put("request",result_of_transfer_approved_status);
                 return new ResponseEntity(new ResponseData(0, null, final_result), HttpStatus.OK);
 
             }
             else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(1, "Error in transaction", null), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
