@@ -167,7 +167,8 @@ public class UserService {
                 "       to_char(b.bond_start_date,'DD.MM.YYYY') as bond_start_date, " +
                 "       to_char(b.bond_end_date,'DD.MM.YYYY') as bond_end_date, " +
                 "       to_char(o.buy_date,'DD.MM.YYYY') as buy_date, " +
-                "       o.buy_price " +
+                "       o.buy_price, " +
+                "       0 as transfer_type " +
                 "from gross.owns o join gross.bonds b " +
                 "on o.bond_number=b.bond_number " +
                 "    and o.bond_series=b.bond_series " +
@@ -194,27 +195,45 @@ public class UserService {
     public ResponseEntity<ResponseData> buySellRequest(BuySellRequestModel buySellRequestModel) {
         String sql_buy_sell_request = "INSERT INTO gross.transfer_requests (transfer_request_id, requester_account_number, bond_series, bond_number, money_amount, request_made_date, transfer_type, transfer_approved) " +
                 "VALUES (DEFAULT, ?, ?, ?, ?, DEFAULT, ?, DEFAULT)";
-        String sql_change_bond_market_status = "UPDATE gross.owns SET bond_in_market = ? WHERE bond_series = ? AND bond_number = ?";
+        String sql_change_bond_market_status = "UPDATE gross.bonds SET bond_in_market = ? WHERE bond_series = ? AND bond_number = ?";
+        String sql_check_for_already_in_market = "select count(*) from gross.transfer_requests t where t.bond_series=? and t.bond_number=? and t.transfer_type=? and t.transfer_approved=false";
 
-
-        String result_of_request = null;
-        String result_of_bond_market_status_change;
-
+        ResponseData responseData = new ResponseData(1, "error", null);
+        int result_of_request = 0;
         try {
             if (buySellRequestModel.getTransfer_type() == 0) {
-                result_of_bond_market_status_change = jdbcTemplate.queryForObject(sql_change_bond_market_status, new Object[]{true, buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number()}, String.class);
-                result_of_request = jdbcTemplate.queryForObject(sql_buy_sell_request, new Object[]{buySellRequestModel.getRequester_account_number(), buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number(), buySellRequestModel.getMoney_amount(), "sell"}, String.class);
+                String result_of_number_already_in_market = jdbcTemplate.queryForObject(sql_check_for_already_in_market, new Object[]{buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number(),"sell"}, String.class);
+                assert result_of_number_already_in_market != null;
+                if (Integer.parseInt(result_of_number_already_in_market)==0)
+                {
+                    jdbcTemplate.update(sql_change_bond_market_status,true, buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number());
+                    result_of_request = jdbcTemplate.update(sql_buy_sell_request,buySellRequestModel.getRequester_account_number(), buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number(), buySellRequestModel.getMoney_amount(), "sell");
+
+                    responseData.setStatus(0);
+                    responseData.setError(null);
+                    responseData.setData(result_of_request);
+                } else {
+                    responseData.setStatus(1);
+                    responseData.setError("Already in market");
+                    responseData.setData(null);
+                }
             } else if (buySellRequestModel.getTransfer_type() == 1) {
-                result_of_request = jdbcTemplate.queryForObject(sql_buy_sell_request, new Object[]{buySellRequestModel.getRequester_account_number(), buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number(), buySellRequestModel.getMoney_amount(), "buy"}, String.class);
+                String result_of_number_already_in_market = jdbcTemplate.queryForObject(sql_check_for_already_in_market, new Object[]{buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number(),"buy"}, String.class);
+                assert result_of_number_already_in_market != null;
+                if (Integer.parseInt(result_of_number_already_in_market)==0)
+                {
+                    result_of_request = jdbcTemplate.update(sql_buy_sell_request,buySellRequestModel.getRequester_account_number(), buySellRequestModel.getBond_series(), buySellRequestModel.getBond_number(), buySellRequestModel.getMoney_amount(), "buy");
+                    responseData.setStatus(0);
+                    responseData.setError(null);
+                    responseData.setData(result_of_request);
+                } else {
+                    responseData.setStatus(1);
+                    responseData.setError("Already in market");
+                    responseData.setData(null);
+                }
             }
 
-            if (Integer.valueOf(result_of_request) > 0) {
-                return new ResponseEntity(new ResponseData(0, null, result_of_request), HttpStatus.OK);
-
-            } else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
-
-            }
+            return new ResponseEntity(responseData, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);

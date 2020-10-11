@@ -12,7 +12,6 @@ public class BuySellRequestModel {
     private String bond_series;
     private String bond_number;
     private float money_amount;
-//    private String request_made_date;
     private int transfer_type;
     private boolean transfer_approved;
 }
