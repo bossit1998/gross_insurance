@@ -5,6 +5,7 @@ import com.example.models.*;
 import com.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,26 @@ public class UserController {
         return userService.getMyBondsFull(bondInfoModel);
     }
 
+    // get the bonds of the user which will be shown in dashboard
+    @GetMapping("/selling-bonds-dash")
+    public ResponseEntity<ResponseData> getSellingBondsDashboard() {
+        return userService.getSellingBondsDashboard();
+    }
+    // get the bonds of the user which will be shown in full
+    @PostMapping("/selling-bonds-info")
+    public ResponseEntity<ResponseData> getSellingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
+        return userService.getSendingBondsFull(bondInfoModel);
+    }
+
+
+
+
+    // make buy/sell request - request for a buy/sell form
+    @PostMapping("/buy-sell-request")
+    public ResponseEntity<ResponseData> buySellRequest(@RequestBody BuySellRequestModel buySellRequestModel) {
+        return userService.buySellRequest(buySellRequestModel);
+    }
+
     // make transfer - first request to get all information about the bond being sold
     @PostMapping("/make-transfer-first")
     public ResponseEntity<ResponseData> makeTransferFirst(@RequestBody FirstTransferModel firstTransferModel) {
@@ -53,12 +74,6 @@ public class UserController {
     @PostMapping("/make-transfer-second")
     public ResponseEntity<ResponseData> makeTransferSecond(@RequestBody UserRequestModel userRequestModel) {
         return userService.makeTransferSecond(userRequestModel);
-    }
-
-    // make buy/sell request - request for a buy/sell form
-    @PostMapping("/buy-sell-request")
-    public ResponseEntity<ResponseData> buySellRequest(@RequestBody BuySellRequestModel buySellRequestModel) {
-        return userService.buySellRequest(buySellRequestModel);
     }
 
     // approve the transfer by seller
