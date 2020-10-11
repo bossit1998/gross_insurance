@@ -181,7 +181,7 @@ public class UserService {
         try {
             result = jdbcTemplate.queryForList(sql_get_my_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number(),bondInfoModel.getCustomer_account_number());
             if (result.size() > 0) {
-                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, result.get(0)), HttpStatus.OK);
             } else {
                 return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
             }
