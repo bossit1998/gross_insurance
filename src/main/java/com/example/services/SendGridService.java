@@ -66,9 +66,6 @@ public class SendGridService {
                 "</body> " +
                 "</html> ");
 
-
-
-
         Mail mail = new Mail(from,subject,to,content);
 
 ////        System.out.println(appKey);

@@ -33,9 +33,14 @@ public class UserController {
     }
 
     // get the bonds of the user which will be shown in dashboard
-    @PostMapping("/my-bonds")
-    public ResponseEntity<ResponseData> getBonds(@RequestBody UserRequestModel userRequestModel) {
-        return userService.getMyBonds(userRequestModel);
+    @PostMapping("/my-bonds-dash")
+    public ResponseEntity<ResponseData> getBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
+        return userService.getMyBondsDashboard(userRequestModel);
+    }
+    // get the bonds of the user which will be shown in full
+    @PostMapping("/my-bonds-info")
+    public ResponseEntity<ResponseData> getBondsFull(@RequestBody BondInfoModel bondInfoModel) {
+        return userService.getMyBondsFull(bondInfoModel);
     }
 
     // make transfer - first request to get all information about the bond being sold

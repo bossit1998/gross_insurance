@@ -42,7 +42,7 @@ public class GeneralController {
 
     // news
     @GetMapping("/news")
-    public ResponseData getNews() {
+    public ResponseEntity<ResponseData> getNews() {
         return generalService.getNews();
     }
 }

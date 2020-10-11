@@ -41,10 +41,10 @@ public class GeneralService {
         List<Map<String, Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_reviews);
-            return new ResponseEntity(new ResponseData(0,"undefined",result), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,null,result), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
 
         }
     }
@@ -57,23 +57,24 @@ public class GeneralService {
         int result;
         try {
             result = jdbcTemplate.update(sql_post_reviews,reviewModel.getReviewer_nickname(),reviewModel.getReviewer_comment(),reviewModel.getReviewer_mail());
-            return new ResponseEntity(new ResponseData(0,"undefined","ok"), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,null,"ok"), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Can't connect to database","undefined"), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
         }
     }
 
-    public ResponseData getNews() {
+    public ResponseEntity<ResponseData> getNews() {
         String sql_get_reviews = "Select * from gross.news";
 
         List<Map<String, Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_reviews);
-            return new ResponseData(0,"undefined",result);
+            return new ResponseEntity(new ResponseData(0,null,result), HttpStatus.OK);
+
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            return new ResponseData(1,"error","undefined");
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
         }
     }
 
