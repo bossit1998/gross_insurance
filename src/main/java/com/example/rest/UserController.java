@@ -100,5 +100,4 @@ public class UserController {
     public ResponseEntity<ResponseData> transferApproved(@RequestBody TransferApprovedModel transferApprovedModel) {
         return userService.transferApproved(transferApprovedModel);
     }
-
 }

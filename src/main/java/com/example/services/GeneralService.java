@@ -2,6 +2,7 @@ package com.example.services;
 
 import com.example.models.ResponseData;
 import com.example.models.ReviewModel;
+import com.example.models.UserRequestModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,13 +65,14 @@ public class GeneralService {
         }
     }
 
+    // get news
     public ResponseEntity<ResponseData> getNews() {
         String sql_get_reviews = "Select * from gross.news";
 
         List<Map<String, Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_reviews);
-            return new ResponseEntity(new ResponseData(0,null,result), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,null, result.get(0)), HttpStatus.OK);
 
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
@@ -78,4 +80,19 @@ public class GeneralService {
         }
     }
 
+    public ResponseEntity<ResponseData> profile(UserRequestModel userRequestModel) {
+        String sql_get_reviews = "select customer_name, customer_surname, customer_account_number, customer_balance, customer_balance, customer_phone_number,customer_mail " +
+                "        from gross.customers " +
+                "        where customer_account_number = ?";
+
+        List<Map<String, Object>> result;
+        try {
+            result = jdbcTemplate.queryForList(sql_get_reviews, userRequestModel.getCustomer_account_number());
+            return new ResponseEntity(new ResponseData(0,null, result.get(0)), HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
+        }
+    }
 }

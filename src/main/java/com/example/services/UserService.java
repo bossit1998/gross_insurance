@@ -487,6 +487,14 @@ public class UserService {
                 final_result.put("seller",result_of_update_seller);
                 final_result.put("buyer",result_of_update_buyer);
                 final_result.put("request",result_of_transfer_approved_status);
+
+                System.out.println("transfer "+result_of_transfer);
+                System.out.println("status "+result_of_bond_market_status_change);
+                System.out.println("owns "+result_of_update_owns);
+                System.out.println("seller "+result_of_update_seller);
+                System.out.println("buyer "+result_of_update_buyer);
+                System.out.println("request "+result_of_transfer_approved_status);
+
                 return new ResponseEntity(new ResponseData(0, null, final_result), HttpStatus.OK);
 
             }

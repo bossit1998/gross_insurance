@@ -2,6 +2,8 @@ package com.example.rest;
 
 import com.example.models.ResponseData;
 import com.example.models.ReviewModel;
+import com.example.models.TransferApprovedModel;
+import com.example.models.UserRequestModel;
 import com.example.services.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +46,11 @@ public class GeneralController {
     @GetMapping("/news")
     public ResponseEntity<ResponseData> getNews() {
         return generalService.getNews();
+    }
+
+    // profile info
+    @PostMapping("/profile")
+    public ResponseEntity<ResponseData> transferApproved(@RequestBody UserRequestModel userRequestModel) {
+        return generalService.profile(userRequestModel);
     }
 }
