@@ -35,28 +35,47 @@ public class UserController {
 
     // get the bonds of the user which will be shown in dashboard
     @PostMapping("/my-bonds-dash")
-    public ResponseEntity<ResponseData> getBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<ResponseData> getMyBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
         return userService.getMyBondsDashboard(userRequestModel);
     }
     // get the bonds of the user which will be shown in full
     @PostMapping("/my-bonds-info")
-    public ResponseEntity<ResponseData> getBondsFull(@RequestBody BondInfoModel bondInfoModel) {
+    public ResponseEntity<ResponseData> getMyBondsFull(@RequestBody BondInfoModel bondInfoModel) {
         return userService.getMyBondsFull(bondInfoModel);
     }
 
-    // get the bonds of the user which will be shown in dashboard
+    // get the bonds of the user which is being sold in dashboard
+    @PostMapping("/my-selling-bonds-dash")
+    public ResponseEntity<ResponseData> getMySellingBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
+        return userService.getMySellingBondsDashboard(userRequestModel);
+    }
+    // get the bonds of the user which is being sold in full
+    @PostMapping("/my-selling-bonds-info")
+    public ResponseEntity<ResponseData> getMySellingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
+        return userService.getMySellingBondsFull(bondInfoModel);
+    }
+
+    // get the bonds of the user which is being bought in dashboard
+    @PostMapping("/my-buying-bonds-dash")
+    public ResponseEntity<ResponseData> getMyBuyingBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
+        return userService.getMyBuyingBondsDashboard(userRequestModel);
+    }
+    // get the bonds of the user which is being bought in full
+    @PostMapping("/my-buying-bonds-info")
+    public ResponseEntity<ResponseData> getMyBuyingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
+        return userService.getMyBuyingBondsFull(bondInfoModel);
+    }
+
+    // get the bonds which being sold in dashboard
     @GetMapping("/selling-bonds-dash")
     public ResponseEntity<ResponseData> getSellingBondsDashboard() {
         return userService.getSellingBondsDashboard();
     }
-    // get the bonds of the user which will be shown in full
+    // get the bonds which being sold in full
     @PostMapping("/selling-bonds-info")
     public ResponseEntity<ResponseData> getSellingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
         return userService.getSendingBondsFull(bondInfoModel);
     }
-
-
-
 
     // make buy/sell request - request for a buy/sell form
     @PostMapping("/buy-sell-request")

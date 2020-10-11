@@ -191,6 +191,136 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<ResponseData> getMySellingBondsDashboard(UserRequestModel userRequestModel) {
+        String sql_get_my_selling_bonds = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent " +
+                "   from  gross.owns o  join gross.transfer_requests t on t.requester_account_number=o.owner_account and t.bond_series=o.bond_series and t.bond_number=o.bond_number " +
+                "   join gross.bonds b on b.bond_series=t.bond_series and b.bond_number=t.bond_number " +
+                "   where t.transfer_type='sell' and t.transfer_approved=false and b.bond_in_market=true and o.owner_account=?";
+
+        List<Map<String, Object>> result;
+
+        try {
+            result = jdbcTemplate.queryForList(sql_get_my_selling_bonds,userRequestModel.getCustomer_account_number());
+            if (result.size() > 0) {
+                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            } else {
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<ResponseData> getMySellingBondsFull(BondInfoModel bondInfoModel) {
+        String sql_get_my_selling_bonds_full = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent, b.bond_start_date, b.bond_end_date, b.bond_life_time, t.money_amount as price, to_char(t.request_made_date, 'DD.MM.YYYY') as sell_request_date " +
+                "   from  gross.owns o  join gross.transfer_requests t on t.requester_account_number=o.owner_account and t.bond_series=o.bond_series and t.bond_number=o.bond_number " +
+                "   join gross.bonds b on b.bond_series=t.bond_series and b.bond_number=t.bond_number " +
+                "   where t.transfer_type='sell' and t.transfer_approved=false and b.bond_in_market=true and b.bond_series=? and b.bond_number=? and o.owner_account=?";
+
+        List<Map<String, Object>> result;
+
+        try {
+            result = jdbcTemplate.queryForList(sql_get_my_selling_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number(),bondInfoModel.getCustomer_account_number());
+            if (result.size() > 0) {
+                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            } else {
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<ResponseData> getMyBuyingBondsDashboard(UserRequestModel userRequestModel) {
+        String sql_get_my_selling_bonds = "select b.bond_series, b.bond_number, b.bond_absolute_value, b.bond_percent " +
+                "   from  gross.transfer_requests t join gross.bonds b on b.bond_series=t.bond_series and b.bond_number=t.bond_number " +
+                "   where t.transfer_type='buy' and t.transfer_approved=false and b.bond_in_market=true and t.requester_account_number=?";
+
+        List<Map<String, Object>> result;
+
+        try {
+            result = jdbcTemplate.queryForList(sql_get_my_selling_bonds,userRequestModel.getCustomer_account_number());
+            if (result.size() > 0) {
+                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            } else {
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<ResponseData> getMyBuyingBondsFull(BondInfoModel bondInfoModel) {
+        return null;
+    }
+
+    // get the bonds which are being sold in dashboard
+    public ResponseEntity<ResponseData> getSellingBondsDashboard() {
+        String sql_get_selling_bonds = "select       " +
+                "                         b.bond_series,       " +
+                "                         b.bond_number,       " +
+                "                         b.bond_absolute_value,       " +
+                "                         b.bond_percent       " +
+                "                  from gross.transfer_requests t natural join gross.bonds b " +
+                "                  where t.bond_number=b.bond_number " +
+                "                      and t.bond_series=b.bond_series " +
+                "                      and t.transfer_type = 'sell' " +
+                "                      and t.transfer_approved = false";
+
+        List<Map<String, Object>> result;
+
+        try {
+            result = jdbcTemplate.queryForList(sql_get_selling_bonds);
+            if (result.size() > 0) {
+                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            } else {
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
+        }
+    }
+
+    // get the bonds which are being sold in popup
+    public ResponseEntity<ResponseData> getSendingBondsFull(BondInfoModel bondInfoModel) {
+        String sql_get_selling_bonds_full = "select      " +
+                "                        b.bond_series,      " +
+                "                        b.bond_number,      " +
+                "                        b.bond_absolute_value,      " +
+                "                        b.bond_percent,      " +
+                "                        b.bond_life_time,      " +
+                "                        to_char(b.bond_start_date,'DD.MM.YYYY') as bond_start_date,      " +
+                "                        to_char(b.bond_end_date,'DD.MM.YYYY') as bond_end_date, " +
+                "                        t.money_amount as price, " +
+                "                        concat(c.customer_name, ' ',c.customer_surname) as seller_name, " +
+                "                        1 as transfer_type " +
+                "                 from gross.transfer_requests t join gross.bonds b " +
+                "                 on t.bond_number=b.bond_number " +
+                "                     and t.bond_series=b.bond_series " +
+                "                        join gross.customers c on t.requester_account_number=c.customer_account_number " +
+                "                 where t.bond_series=? " +
+                "                     and t.bond_number=? " +
+                "                    and t.transfer_type='sell'";
+
+        List<Map<String, Object>> result;
+
+        try {
+            result = jdbcTemplate.queryForList(sql_get_selling_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number());
+            if (result.size() > 0) {
+                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
+            } else {
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
+        }
+    }
+
     // make buy/sell request - request for a buy/sell form
     public ResponseEntity<ResponseData> buySellRequest(BuySellRequestModel buySellRequestModel) {
         String sql_buy_sell_request = "INSERT INTO gross.transfer_requests (transfer_request_id, requester_account_number, bond_series, bond_number, money_amount, request_made_date, transfer_type, transfer_approved) " +
@@ -242,7 +372,22 @@ public class UserService {
 
     // make transfer - first request to get all information about the bond being sold
     public ResponseEntity<ResponseData> makeTransferFirst(FirstTransferModel firstTransferModel) {
-        String sql_get_bond_details = "select b.bond_series,b.bond_number,b.bond_absolute_value,b.bond_percent,b.bond_life_time,b.bond_start_date,b.bond_end_date,t.money_amount,t.requester_account_number, c.customer_privilege from gross.transfer_requests t join gross.bonds b on t.bond_series=b.bond_series and t.bond_number=b.bond_number join gross.customers c on c.customer_account_number = t.requester_account_number where t.transfer_type='sell' and t.bond_series=? and t.bond_number=?";
+        String sql_get_bond_details = "   select b.bond_series,  " +
+                "          b.bond_number,  " +
+                "          b.bond_absolute_value,  " +
+                "          b.bond_percent,  " +
+                "          b.bond_life_time,  " +
+                "          b.bond_start_date,  " +
+                "          b.bond_end_date,  " +
+                "          t.money_amount as price,  " +
+                "          concat(c.customer_name, c.customer_surname) as seller_name,  " +
+                "          c.customer_privilege  " +
+                "   from gross.transfer_requests t  " +
+                "            join gross.bonds b on t.bond_series = b.bond_series and t.bond_number = b.bond_number  " +
+                "            join gross.customers c on c.customer_account_number = t.requester_account_number  " +
+                "   where t.transfer_type = 'sell'  " +
+                "     and t.bond_series=?  " +
+                "     and t.bond_number=?";
 
         List<Map<String,Object>> result;
         try {
@@ -325,67 +470,6 @@ public class UserService {
 
             }
             else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
-        }
-    }
-
-    public ResponseEntity<ResponseData> getSellingBondsDashboard() {
-        String sql_get_selling_bonds = "select       " +
-                "                         b.bond_series,       " +
-                "                         b.bond_number,       " +
-                "                         b.bond_absolute_value,       " +
-                "                         b.bond_percent       " +
-                "                  from gross.transfer_requests t natural join gross.bonds b " +
-                "                  where t.bond_number=b.bond_number " +
-                "                      and t.bond_series=b.bond_series " +
-                "                      and t.transfer_type = 'sell' " +
-                "                      and t.transfer_approved = false";
-
-        List<Map<String, Object>> result;
-
-        try {
-            result = jdbcTemplate.queryForList(sql_get_selling_bonds);
-            if (result.size() > 0) {
-                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
-            } else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
-        }
-    }
-
-    public ResponseEntity<ResponseData> getSendingBondsFull(BondInfoModel bondInfoModel) {
-        String sql_get_selling_bonds_full = "select      " +
-                "                        b.bond_series,      " +
-                "                        b.bond_number,      " +
-                "                        b.bond_absolute_value,      " +
-                "                        b.bond_percent,      " +
-                "                        b.bond_life_time,      " +
-                "                        to_char(b.bond_start_date,'DD.MM.YYYY') as bond_start_date,      " +
-                "                        to_char(b.bond_end_date,'DD.MM.YYYY') as bond_end_date, " +
-                "                        t.money_amount as price, " +
-                "                        concat(c.customer_name, ' ',c.customer_surname) as seller_name  " +
-                "                 from gross.transfer_requests t join gross.bonds b " +
-                "                 on t.bond_number=b.bond_number " +
-                "                     and t.bond_series=b.bond_series " +
-                "                        join gross.customers c on t.requester_account_number=c.customer_account_number " +
-                "                 where t.bond_series=? " +
-                "                     and t.bond_number=? " +
-                "                    and t.transfer_type='sell'";
-
-        List<Map<String, Object>> result;
-
-        try {
-            result = jdbcTemplate.queryForList(sql_get_selling_bonds_full,bondInfoModel.getBond_series(),bondInfoModel.getBond_number());
-            if (result.size() > 0) {
-                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
-            } else {
                 return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
             }
         } catch (Exception e) {
