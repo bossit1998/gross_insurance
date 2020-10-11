@@ -34,31 +34,31 @@ public class UserController {
 
     // get the bonds of the user which will be shown in dashboard
     @PostMapping("/my-bonds")
-    public ResponseData getBonds(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<ResponseData> getBonds(@RequestBody UserRequestModel userRequestModel) {
         return userService.getMyBonds(userRequestModel);
     }
 
     // make transfer - first request to get all information about the bond being sold
     @PostMapping("/make-transfer-first")
-    public ResponseData makeTransferFirst(@RequestBody FirstTransferModel firstTransferModel) {
+    public ResponseEntity<ResponseData> makeTransferFirst(@RequestBody FirstTransferModel firstTransferModel) {
         return userService.makeTransferFirst(firstTransferModel);
     }
 
     // make transfer - second request to get full info of the buyer
     @PostMapping("/make-transfer-second")
-    public ResponseData makeTransferSecond(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<ResponseData> makeTransferSecond(@RequestBody UserRequestModel userRequestModel) {
         return userService.makeTransferSecond(userRequestModel);
     }
 
     // make buy/sell request - request for a buy/sell form
     @PostMapping("/buy-sell-request")
-    public ResponseData buySellRequest(@RequestBody BuySellRequestModel buySellRequestModel) {
+    public ResponseEntity<ResponseData> buySellRequest(@RequestBody BuySellRequestModel buySellRequestModel) {
         return userService.buySellRequest(buySellRequestModel);
     }
 
     // approve the transfer by seller
     @PostMapping("/transfer-approved")
-    public ResponseData transferApproved(@RequestBody TransferApprovedModel transferApprovedModel) {
+    public ResponseEntity<ResponseData> transferApproved(@RequestBody TransferApprovedModel transferApprovedModel) {
         return userService.transferApproved(transferApprovedModel);
     }
 

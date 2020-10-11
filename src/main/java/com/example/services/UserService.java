@@ -44,10 +44,10 @@ public class UserService {
             String sent_verification_code = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
-            return new ResponseEntity(new ResponseData(0,"undefined",sent_verification_code), HttpStatus.OK);
+            return new ResponseEntity(new ResponseData(0,null,sent_verification_code), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseEntity(new ResponseData(1,"Email already exist","undefined"), HttpStatus.OK);
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1,"Email already exist",null), HttpStatus.OK);
 
         }
     }
@@ -58,7 +58,7 @@ public class UserService {
 //        String sql_sign_up = "INSERT INTO gross.customers (customer_id, customer_name, customer_surname, customer_password, customer_account_number, customer_balance_number, customer_balance, customer_phone_number, customer_mail, customer_privilege, customer_register_date) " +
 //                "VALUES (DEFAULT, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT, ?, ?, DEFAULT, DEFAULT)";
 
-        ResponseData responseData = new ResponseData(1, "Incorrect verification code", "undefined");
+        ResponseData responseData = new ResponseData(1, "Incorrect verification code", null);
         List<Map<String,Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_user_info_from_verification_code, signUpEmailConfirmedModel.getSecurity_key());
@@ -73,7 +73,7 @@ public class UserService {
                     {
                        responseData.setStatus(1);
                        responseData.setError("Expired verification code");
-                       responseData.setData("undefined");
+                       responseData.setData(null);
                     }
                     else
                     {
@@ -86,7 +86,7 @@ public class UserService {
                         jdbcTemplate.update(sql_update_email_verified,signUpEmailConfirmedModel.getCustomer_password(),next_account_number_in_string,now,customer_mail);
 
                         responseData.setStatus(0);
-                        responseData.setError("undefined");
+                        responseData.setError(null);
                         responseData.setData("ok");
                     }
                 });
@@ -98,36 +98,39 @@ public class UserService {
                 return new ResponseEntity(responseData, HttpStatus.OK);
             }
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
             return new ResponseEntity(new ResponseData(1, "error", "undefined"), HttpStatus.OK);
         }
     }
 
     // sign in
     public ResponseEntity<ResponseData> signIn(SignInModel signInModel) {
-        String sql_sign_in = "select count(*) from gross.customers where customer_mail=? and customer_password=? and customer_account_verified=true";
+        String sql_sign_in = "select customer_account_number from gross.customers where customer_mail=? and customer_password=? and customer_account_verified=true";
 
         String result;
         try {
             result = jdbcTemplate.queryForObject(sql_sign_in, new Object[]{signInModel.getCustomer_email(), signInModel.getCustomer_password()}, String.class);
-            if (Integer.valueOf(result) > 0) {
+            if (!result.isEmpty()) {
                 HashMap<String,Object> response_object = new HashMap<>();
                 response_object.put("message","ok");
                 response_object.put("mail",signInModel.getCustomer_email());
                 response_object.put("token","here will be token");
-                return new ResponseEntity(new ResponseData(0, null, response_object), HttpStatus.OK);
+//                return new ResponseEntity(new ResponseData(0, null, response_object), HttpStatus.OK);
 
+                UserRequestModel userRequestModel = new UserRequestModel();
+                userRequestModel.setCustomer_account_number(result);
+                return getMyBonds(userRequestModel);
             } else {
                 return new ResponseEntity(new ResponseData(1,"Incorrect username or password",null), HttpStatus.OK);
             }
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
             return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
         }
     }
 
     // get the bonds of the user which will be shown in dashboard
-    public ResponseData getMyBonds(UserRequestModel userRequestModel) {
+    public ResponseEntity<ResponseData> getMyBonds(UserRequestModel userRequestModel) {
         String sql_get_my_bonds = "select " +
                 "       b.bond_series, " +
                 "       b.bond_number, " +
@@ -146,48 +149,49 @@ public class UserService {
                 "    and o.owner_account = ?";
 
         List<Map<String, Object>> result;
+
         try {
             result = jdbcTemplate.queryForList(sql_get_my_bonds, userRequestModel.getCustomer_account_number());
             if (result.size() > 0) {
-                return new ResponseData(0, "undefined", result);
+                return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
-                return new ResponseData(1, "error", "undefined");
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
             }
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseData(1, "error", "undefined");
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
         }
     }
 
     // make transfer - first request to get all information about the bond being sold
-    public ResponseData makeTransferFirst(FirstTransferModel firstTransferModel) {
+    public ResponseEntity<ResponseData> makeTransferFirst(FirstTransferModel firstTransferModel) {
         String sql_get_bond_details = "select b.bond_series,b.bond_number,b.bond_absolute_value,b.bond_percent,b.bond_life_time,b.bond_start_date,b.bond_end_date,t.money_amount,t.requester_account_number, c.customer_privilege from gross.transfer_requests t join gross.bonds b on t.bond_series=b.bond_series and t.bond_number=b.bond_number join gross.customers c on c.customer_account_number = t.requester_account_number where t.transfer_type='sell' and t.bond_series=? and t.bond_number=?";
 
         List<Map<String,Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_bond_details, firstTransferModel.getBond_series(), firstTransferModel.getBond_number());
-            return new ResponseData(0, "undefined", result);
+            return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseData(1, "error", "undefined");
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
         }
     }
 
     // make transfer - second request to get full info of the buyer
-    public ResponseData makeTransferSecond(UserRequestModel userRequestModel) {
+    public ResponseEntity<ResponseData> makeTransferSecond(UserRequestModel userRequestModel) {
         String sql_get_customer_details = "select customer_name, customer_surname, customer_account_number,customer_balance from gross.customers where customer_account_number=?";
         List<Map<String,Object>> result;
         try {
             result = jdbcTemplate.queryForList(sql_get_customer_details, userRequestModel.getCustomer_account_number());
-            return new ResponseData(0, "undefined", result);
+            return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseData(1, "error", "undefined");
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
         }
     }
 
     // make buy/sell request - request for a buy/sell form
-    public ResponseData buySellRequest(BuySellRequestModel buySellRequestModel) {
+    public ResponseEntity<ResponseData> buySellRequest(BuySellRequestModel buySellRequestModel) {
         String sql_buy_sell_request = "INSERT INTO gross.transfer_requests (transfer_request_id, requester_account_number, bond_series, bond_number, money_amount, request_made_date, transfer_type, transfer_approved) " +
                 "VALUES (DEFAULT, ?, ?, ?, ?, DEFAULT, ?, DEFAULT)";
         String sql_change_bond_market_status = "UPDATE gross.owns SET bond_in_market = ? WHERE bond_series = ? AND bond_number = ?";
@@ -205,18 +209,20 @@ public class UserService {
             }
 
             if (Integer.valueOf(result_of_request) > 0) {
-                return new ResponseData(0, "undefined", result_of_request);
+                return new ResponseEntity(new ResponseData(0, null, result_of_request), HttpStatus.OK);
+
             } else {
-                return new ResponseData(1, "error", "undefined");
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+
             }
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseData(1, "error", "undefined");
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
         }
     }
 
     // buy request approved and necessary calculations should be taken
-    public ResponseData transferApproved(TransferApprovedModel transferApprovedModel) {
+    public ResponseEntity<ResponseData> transferApproved(TransferApprovedModel transferApprovedModel) {
 
         String sql_get_seller_details = "select tr.requester_account_number as seller_account_number, c.customer_balance as seller_balance from gross.transfer_requests tr join gross.customers c on tr.requester_account_number=c.customer_account_number where tr.bond_series=? and tr.bond_number=? and tr.transfer_type='sell' and tr.transfer_approved=false";
         String sql_get_buyer_details = "select tr.requester_account_number as buyer_account_number, c.customer_balance as buyer_balance, tr.money_amount from gross.transfer_requests tr join gross.customers c on tr.requester_account_number=c.customer_account_number where tr.bond_series=? and tr.bond_number=? and transfer_type='buy' and tr.transfer_approved=false";
@@ -269,14 +275,15 @@ public class UserService {
                 final_result.put("owns",result_of_update_owns);
                 final_result.put("seller",result_of_update_seller);
                 final_result.put("buyer",result_of_update_buyer);
-                return new ResponseData(0,"undefined",final_result);
+                return new ResponseEntity(new ResponseData(0, null, final_result), HttpStatus.OK);
+
             }
             else {
-                return new ResponseData(1,"not exist","undefined");
+                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
             }
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-            return new ResponseData(1,"error","undefined");
+            System.out.println(e.getMessage());
+            return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
         }
     }
 

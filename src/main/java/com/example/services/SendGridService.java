@@ -81,7 +81,7 @@ public class SendGridService {
 
 
 //        System.out.println(Environment.getProperty("SENDGRID_API_KEY"));
-        System.out.println(System.getenv("SENDGRID_API_KEY"));
+//        System.out.println(System.getenv("SENDGRID_API_KEY"));
 //        System.out.println(my.api.key);
 
 
@@ -95,7 +95,7 @@ public class SendGridService {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            Response response = sg.api((request));
+//            Response response = sg.api((request));
             return my_gen_code;
         } catch (IOException e) {
             return e.getMessage()+e.getCause();
