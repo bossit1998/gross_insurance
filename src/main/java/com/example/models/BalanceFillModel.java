@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BalanceFillModel {
-
+    private String customer_phone_number;
 
 }
