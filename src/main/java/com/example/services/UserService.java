@@ -161,14 +161,15 @@ public class UserService {
         List<Map<String, Object>> result;
 
         try {
+            HashMap res = new HashMap();
+            res.put("account_number", userRequestModel.getCustomer_account_number());
+
             result = jdbcTemplate.queryForList(sql_get_my_bonds, userRequestModel.getCustomer_account_number());
             if (result.size() > 0) {
-
-                HashMap res = new HashMap();
-                res.put("account_number", userRequestModel.getCustomer_account_number());
                 res.put("bonds",result);
                 return new ResponseEntity(new ResponseData(0, null, res), HttpStatus.OK);
             } else {
+                res.put("bonds","No available bonds");
                 return new ResponseEntity(new ResponseData(0, null, new String[5]), HttpStatus.OK);
             }
         } catch (Exception e) {
