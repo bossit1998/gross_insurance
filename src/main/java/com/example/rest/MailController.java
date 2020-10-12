@@ -16,6 +16,9 @@ import java.io.IOException;
 @RestController
 public class MailController {
 
+    @Value("${app.sendgrid.key}")
+    private String appKey;
+
     @GetMapping("twilio")
     public Response twilio() {
         Email from = new Email("me@mail.com");
@@ -24,7 +27,7 @@ public class MailController {
         Content content = new Content("text/plain","and easy");
         Mail mail = new Mail(from,subject,to,content);
 
-        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+        SendGrid sg = new SendGrid(appKey);
         Request request = new Request();
 
         try {
