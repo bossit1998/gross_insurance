@@ -16,26 +16,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Random;
 
-//import javax.mail.MessagingException;
-
 @Service
 public class SendGridService {
-
-//    @Value("${SENDGRID_API_KEY}")
-//    private String appKey;
-
-//    @Value("${my.api.key}")
-//    private String appKey_2;
-
-//    @Value("${SENDGRID_API_KEY}")
-//    private String s1;
-//
-//    @Value("#{environment.SENDGRID_API_KEY}")
-//    private String s2;
-
-//    @Autowired
-//    private Environment env;
-
 
     public String getRandomNumberString() {
         Random rnd = new Random();
@@ -46,7 +28,6 @@ public class SendGridService {
 
         return formatted_code;
     }
-
 
     public String sendEmailWithCode(SignUpEmailConfirmationModel signUpEmailConfirmationModel, String my_gen_code) {
         Email from = new Email("GrossInsurance@mail.com");
@@ -68,23 +49,6 @@ public class SendGridService {
 
         Mail mail = new Mail(from,subject,to,content);
 
-////        System.out.println(appKey);
-//        System.out.println(env.getProperty("SENDGRID_API_KEY"));
-//        System.out.println(System.getenv("SENDGRID_API_KEY"));
-//        System.out.println(env.getProperty(s1));
-//        System.out.println(System.getenv(s1));
-////        System.out.println(env.getProperty(s2));
-//        System.out.println(System.getenv(s2));
-
-
-//        System.out.println(Environment.getProperty("SENDGRID_API_KEY"));
-//        System.out.println(System.getenv("SENDGRID_API_KEY"));
-//        System.out.println(my.api.key);
-
-
-
-//        System.out.println(env.getProperty("SENDGRID_API_KEY"));
-//        System.out.println(System.getenv("SENDGRID_API_KEY"));
         SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
         Request request = new Request();
 
@@ -92,7 +56,7 @@ public class SendGridService {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-//            Response response = sg.api((request));
+            Response response = sg.api((request));
             return my_gen_code;
         } catch (IOException e) {
             return e.getMessage()+e.getCause();
