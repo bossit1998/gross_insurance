@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
 public class GeneralController {
 
@@ -23,6 +20,7 @@ public class GeneralController {
     public ResponseEntity<ResponseData> getReviews() {
         return generalService.getReviews();
     }
+
     @PostMapping("/reviews")
     public ResponseEntity<ResponseData> insertReviews(@RequestBody ReviewModel reviewModel) {
         return generalService.insertReviews(reviewModel);
@@ -34,21 +32,4 @@ public class GeneralController {
         return generalService.getNews();
     }
 
-    // profile info
-    @PostMapping("/profile")
-    public ResponseEntity<ResponseData> transferApproved(@RequestBody UserRequestModel userRequestModel) {
-        return generalService.profile(userRequestModel);
-    }
-
-    // edit profile info
-    @PostMapping("/update-info")
-    public ResponseEntity<ResponseData> updateInfo(@RequestBody UpdateInfoModel updateInfoModel) {
-        return generalService.updateInfo(updateInfoModel);
-    }
-
-    // edit profile password
-    @PostMapping("/update-password")
-    public ResponseEntity<ResponseData> updatePassword(@RequestBody UpdatePasswordModel updatePasswordModel) {
-        return generalService.updatePassword(updatePasswordModel);
-    }
 }

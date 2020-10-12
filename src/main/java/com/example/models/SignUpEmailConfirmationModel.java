@@ -12,6 +12,4 @@ public class SignUpEmailConfirmationModel {
     private String customer_name;
     private String customer_surname;
     private String customer_email;
-//    private String customer_username;
-//    private String customer_phone_number;
 }

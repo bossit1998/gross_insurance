@@ -38,6 +38,7 @@ public class UserController {
     public ResponseEntity<ResponseData> getMyBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
         return userService.getMyBondsDashboard(userRequestModel);
     }
+
     // get the bonds of the user which will be shown in full
     @PostMapping("/my-bonds-info")
     public ResponseEntity<ResponseData> getMyBondsFull(@RequestBody BondInfoModel bondInfoModel) {
@@ -49,6 +50,7 @@ public class UserController {
     public ResponseEntity<ResponseData> getMySellingBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
         return userService.getMySellingBondsDashboard(userRequestModel);
     }
+
     // get the bonds of the user which is being sold in full
     @PostMapping("/my-selling-bonds-info")
     public ResponseEntity<ResponseData> getMySellingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
@@ -60,6 +62,7 @@ public class UserController {
     public ResponseEntity<ResponseData> getMyBuyingBondsDashboard(@RequestBody UserRequestModel userRequestModel) {
         return userService.getMyBuyingBondsDashboard(userRequestModel);
     }
+
     // get the bonds of the user which is being bought in full
     @PostMapping("/my-buying-bonds-info")
     public ResponseEntity<ResponseData> getMyBuyingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
@@ -71,41 +74,11 @@ public class UserController {
     public ResponseEntity<ResponseData> getSellingBondsDashboard() {
         return userService.getSellingBondsDashboard();
     }
+
     // get the bonds which being sold in full
     @PostMapping("/selling-bonds-info")
     public ResponseEntity<ResponseData> getSellingBondsFull(@RequestBody BondInfoModel bondInfoModel) {
-        return userService.getSendingBondsFull(bondInfoModel);
+        return userService.getSellingBondsFull(bondInfoModel);
     }
-
-    // make buy/sell request - request for a buy/sell form
-    @PostMapping("/buy-sell-request")
-    public ResponseEntity<ResponseData> buySellRequest(@RequestBody BuySellRequestModel buySellRequestModel) {
-        return userService.buySellRequest(buySellRequestModel);
-    }
-
-    // make transfer - first request to get all information about the bond being sold
-    @PostMapping("/make-transfer-first")
-    public ResponseEntity<ResponseData> makeTransferFirst(@RequestBody FirstTransferModel firstTransferModel) {
-        return userService.makeTransferFirst(firstTransferModel);
-    }
-
-    // make transfer - second request to get full info of the buyer
-    @PostMapping("/make-transfer-second")
-    public ResponseEntity<ResponseData> makeTransferSecond(@RequestBody UserRequestModel userRequestModel) {
-        return userService.makeTransferSecond(userRequestModel);
-    }
-
-    // approve the transfer by seller
-    @PostMapping("/transfer-approved")
-    public ResponseEntity<ResponseData> transferApproved(@RequestBody TransferApprovedModel transferApprovedModel) {
-        return userService.transferApproved(transferApprovedModel);
-    }
-
-    // approve the transfer by seller
-    @PostMapping("/fill-balance")
-    public ResponseEntity<ResponseData> fillBalance(@RequestBody BalanceFillModel balanceFillModel) {
-        return userService.fillBalance(balanceFillModel);
-    }
-
 
 }
