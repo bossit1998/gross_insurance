@@ -32,24 +32,44 @@ public class UserService {
 
     // sign up - 1st part
     public ResponseEntity<ResponseData> signUpConfirmEmail(SignUpEmailConfirmationModel signUpEmailConfirmationModel) {
+        String sql_get_registered_users_count = "select count(*) from  gross.customers where customer_mail = ? and customer_account_verified = false";
         String sql_insert_email_verification_code="INSERT INTO gross.customers (customer_id, customer_name, customer_surname, customer_password, customer_account_number, customer_mail, customer_register_date, customer_email_verification_code, customer_account_verified) " +
                 "VALUES (DEFAULT, ?, ?, 'not_set', 'not_set', ?, DEFAULT, ?, DEFAULT)";
         String generated_code_for_customer = sendGridService.getRandomNumberString();
 
+        ResponseData responseData = new ResponseData(1, "failed to initialize", null);
+
+
+        String customers;
         int result;
         try {
-            result = jdbcTemplate.update(sql_insert_email_verification_code,signUpEmailConfirmationModel.getCustomer_name(),signUpEmailConfirmationModel.getCustomer_surname(),signUpEmailConfirmationModel.getCustomer_email(),generated_code_for_customer);
+            customers = jdbcTemplate.queryForObject(sql_get_registered_users_count, new String[]{signUpEmailConfirmationModel.getCustomer_email()},String.class);
 
-            System.out.println("Sending Email...");
+            if(Integer.valueOf(customers)==0)
+            {
+                result = jdbcTemplate.update(sql_insert_email_verification_code,signUpEmailConfirmationModel.getCustomer_name(),signUpEmailConfirmationModel.getCustomer_surname(),signUpEmailConfirmationModel.getCustomer_email(),generated_code_for_customer);
+
+                System.out.println("Sending Email...");
 //            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
-            Response xaxa = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
-            System.out.println("Done");
+                Response xaxa = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
+                System.out.println("Done");
+
+                responseData.setStatus(0);
+                responseData.setError(null);
+                responseData.setData(xaxa);
+            }
+            else {
+                responseData.setStatus(1);
+                responseData.setError("Email already exist");
+                responseData.setData(null);
+            }
 
 
-            return new ResponseEntity(new ResponseData(0,null, xaxa), HttpStatus.OK);
+
+            return new ResponseEntity(responseData, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity(new ResponseData(1,"Email already exist",null), HttpStatus.OK);
+            return new ResponseEntity(responseData, HttpStatus.OK);
 
         }
     }
@@ -481,8 +501,9 @@ public class UserService {
             result_of_update_buyer = String.valueOf(jdbcTemplate.update(sql_update_user,-moneyAmount[0], buyerAccountNumber[0]));
             result_of_transfer_approved_status = String.valueOf(jdbcTemplate.update(sql_update_transfer_approved_status,transferApprovedModel.getBond_series(), transferApprovedModel.getBond_number()));
 
+            HashMap<String,String> final_result = new HashMap<>();
+
             if (Integer.valueOf(result_of_transfer) > 0 && Integer.valueOf(result_of_bond_market_status_change) > 0 && Integer.valueOf(result_of_update_owns) > 0 && Integer.valueOf(result_of_update_seller) > 0 && Integer.valueOf(result_of_update_buyer) > 0 && Integer.valueOf(result_of_transfer_approved_status) > 0) {
-                HashMap<String,String> final_result = null;
                 final_result.put("transfer",result_of_transfer);
                 final_result.put("status",result_of_bond_market_status_change);
                 final_result.put("owns",result_of_update_owns);
@@ -497,7 +518,7 @@ public class UserService {
                 System.out.println("buyer "+result_of_update_buyer);
                 System.out.println("request "+result_of_transfer_approved_status);
 
-                return new ResponseEntity(new ResponseData(0, null, final_result), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, "ok"), HttpStatus.OK);
 
             }
             else {

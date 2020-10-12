@@ -56,7 +56,7 @@ public class SendGridService {
             Response response = sg.api((request));
             return response;
         } catch (IOException e) {
-//            return e.getMessage()+e.getCause();
+            System.out.println(e.getMessage()+e.getCause());
             return null;
         }
     }
