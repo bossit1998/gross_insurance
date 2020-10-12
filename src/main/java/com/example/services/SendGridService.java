@@ -8,9 +8,6 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import org.hibernate.cfg.Environment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,7 +26,7 @@ public class SendGridService {
         return formatted_code;
     }
 
-    public String sendEmailWithCode(SignUpEmailConfirmationModel signUpEmailConfirmationModel, String my_gen_code) {
+    public Response sendEmailWithCode(SignUpEmailConfirmationModel signUpEmailConfirmationModel, String my_gen_code) {
         Email from = new Email("GrossInsurance@mail.com");
         Email to = new Email(signUpEmailConfirmationModel.getCustomer_email());
         String customer_full_name=signUpEmailConfirmationModel.getCustomer_name()+" "+signUpEmailConfirmationModel.getCustomer_surname();
@@ -57,9 +54,10 @@ public class SendGridService {
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api((request));
-            return my_gen_code;
+            return response;
         } catch (IOException e) {
-            return e.getMessage()+e.getCause();
+//            return e.getMessage()+e.getCause();
+            return null;
         }
     }
 

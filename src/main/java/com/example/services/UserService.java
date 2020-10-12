@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.models.*;
+import com.sendgrid.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,10 +42,11 @@ public class UserService {
 
             System.out.println("Sending Email...");
 //            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
-            String sent_verification_code = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
+            Response xaxa = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
             System.out.println("Done");
 
-            return new ResponseEntity(new ResponseData(0,null,sent_verification_code), HttpStatus.OK);
+
+            return new ResponseEntity(new ResponseData(0,null, xaxa), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity(new ResponseData(1,"Email already exist",null), HttpStatus.OK);
