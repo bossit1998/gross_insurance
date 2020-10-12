@@ -70,7 +70,6 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity(responseData, HttpStatus.OK);
-
         }
     }
 
@@ -170,7 +169,7 @@ public class UserService {
                 res.put("bonds",result);
                 return new ResponseEntity(new ResponseData(0, null, res), HttpStatus.OK);
             } else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, new String[5]), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
