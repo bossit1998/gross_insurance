@@ -276,7 +276,7 @@ public class UserService {
             if (result.size() > 0) {
                 return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
-                return new ResponseEntity(new ResponseData(1, null, new String[5]), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, new String[5]), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
