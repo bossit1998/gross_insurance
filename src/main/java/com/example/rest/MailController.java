@@ -18,24 +18,24 @@ public class MailController {
 
     @GetMapping("twilio")
     public Response twilio() {
-//        Email from = new Email("me@mail.com");
-//        Email to = new Email("bossbmw55@gmail.com");
-//        String subject = "Sending with Twilio";
-//        Content content = new Content("text/plain","and easy");
-//        Mail mail = new Mail(from,subject,to,content);
-//
-//        SendGrid sg = new SendGrid(appKey);
-//        Request request = new Request();
-//
-//        try {
-//            request.setMethod(Method.POST);
-//            request.setEndpoint("mail/send");
-//            request.setBody(mail.build());
-//            Response response = sg.api((request));
-//            return response;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Email from = new Email("me@mail.com");
+        Email to = new Email("bossbmw55@gmail.com");
+        String subject = "Sending with Twilio";
+        Content content = new Content("text/plain","and easy");
+        Mail mail = new Mail(from,subject,to,content);
+
+        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            Response response = sg.api((request));
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         System.out.println(System.getenv("SENDGRID_API_KEY"));
