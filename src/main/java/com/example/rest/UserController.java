@@ -103,8 +103,8 @@ public class UserController {
 
     // approve the transfer by seller
     @PostMapping("/fill-balance")
-    public ResponseEntity<ResponseData> fillBalance(@RequestBody TransferApprovedModel transferApprovedModel) {
-        return userService.transferApproved(transferApprovedModel);
+    public ResponseEntity<ResponseData> fillBalance(@RequestBody BalanceFillModel balanceFillModel) {
+        return userService.fillBalance(balanceFillModel);
     }
 
 

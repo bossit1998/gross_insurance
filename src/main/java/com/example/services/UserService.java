@@ -535,4 +535,23 @@ public class UserService {
             return new ResponseEntity(new ResponseData(1, "Can't connect to database", null), HttpStatus.OK);
         }
     }
+
+    public ResponseEntity<ResponseData> fillBalance(BalanceFillModel balanceFillModel) {
+        String sql_update_balance = "UPDATE gross.customers SET customer_balance = customer_balance + ? WHERE  customer_account_number = ?";
+        int result;
+        if (balanceFillModel.getConfirmation_code().equals(String.valueOf(369874)))
+        {
+            try {
+                result = jdbcTemplate.update(sql_update_balance,balanceFillModel.getMoney_amount(),balanceFillModel.getCustomer_account_number());
+                return new ResponseEntity(new ResponseData(0,null,369874), HttpStatus.OK);
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+                return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
+            }
+        }
+        else {
+            return new ResponseEntity(new ResponseData(1,"Confirmation number is invalid",null), HttpStatus.OK);
+        }
+
+    }
 }
