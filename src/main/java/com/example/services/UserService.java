@@ -175,7 +175,7 @@ public class UserService {
                 res.put("bonds",result);
                 return new ResponseEntity(new ResponseData(0, null, res), HttpStatus.OK);
             } else {
-                res.put("bonds",new String[5]);
+                res.put("bonds",new String[0]);
                 return new ResponseEntity(new ResponseData(0, null, res), HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -233,7 +233,7 @@ public class UserService {
             if (result.size() > 0) {
                 return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
-                return new ResponseEntity(new ResponseData(0, null, new String[5]), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, new String[0]), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -276,7 +276,7 @@ public class UserService {
             if (result.size() > 0) {
                 return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
-                return new ResponseEntity(new ResponseData(0, null, new String[5]), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, new String[0]), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
