@@ -56,7 +56,7 @@ public class UserService {
                 System.out.println("Sending Email...");
 //            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
 //                Response xaxa = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
-                mailController.twilio();
+                mailController.twilio(signUpEmailConfirmationModel,generated_code_for_customer);
 
                 System.out.println("Done");
 
@@ -233,7 +233,7 @@ public class UserService {
             if (result.size() > 0) {
                 return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(0, null, new String[5]), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -276,7 +276,7 @@ public class UserService {
             if (result.size() > 0) {
                 return new ResponseEntity(new ResponseData(0, null, result), HttpStatus.OK);
             } else {
-                return new ResponseEntity(new ResponseData(1, "No available bonds", null), HttpStatus.OK);
+                return new ResponseEntity(new ResponseData(1, null, new String[5]), HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
