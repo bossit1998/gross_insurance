@@ -169,7 +169,7 @@ public class UserService {
                 res.put("bonds",result);
                 return new ResponseEntity(new ResponseData(0, null, res), HttpStatus.OK);
             } else {
-                res.put("bonds","No available bonds");
+                res.put("bonds",new String[5]);
                 return new ResponseEntity(new ResponseData(0, null, res), HttpStatus.OK);
             }
         } catch (Exception e) {
