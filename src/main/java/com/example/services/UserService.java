@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.models.*;
+import com.example.rest.MailController;
 import com.sendgrid.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class UserService {
 
     @Autowired
     SendGridService sendGridService;
+
+    @Autowired
+    MailController mailController;
 
     private final JdbcTemplate jdbcTemplate;
     @Autowired
@@ -51,12 +55,14 @@ public class UserService {
 
                 System.out.println("Sending Email...");
 //            String sent_verification_code = mailServices.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
-                Response xaxa = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
+//                Response xaxa = sendGridService.sendEmailWithCode(signUpEmailConfirmationModel,generated_code_for_customer);
+                mailController.twilio();
+
                 System.out.println("Done");
 
                 responseData.setStatus(0);
                 responseData.setError(null);
-                responseData.setData(xaxa);
+                responseData.setData("success");
             }
             else {
                 responseData.setStatus(1);
