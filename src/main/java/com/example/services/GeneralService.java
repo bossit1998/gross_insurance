@@ -1,8 +1,6 @@
 package com.example.services;
 
-import com.example.models.ResponseData;
-import com.example.models.ReviewModel;
-import com.example.models.UserRequestModel;
+import com.example.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +88,30 @@ public class GeneralService {
             result = jdbcTemplate.queryForList(sql_get_reviews, userRequestModel.getCustomer_account_number());
             return new ResponseEntity(new ResponseData(0,null, result.get(0)), HttpStatus.OK);
 
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<ResponseData> updateInfo(UpdateInfoModel updateInfoModel) {
+        String sql_update_info = "UPDATE gross.customers SET customer_name = ?, customer_surname = ?, customer_mail = ? WHERE  customer_account_number = ?";
+        int result;
+        try {
+            result = jdbcTemplate.update(sql_update_info,updateInfoModel.getCustomer_name(),updateInfoModel.getCustomer_surname(),updateInfoModel.getCustomer_email(),updateInfoModel.getCustomer_account_number());
+            return new ResponseEntity(new ResponseData(0,null,"ok"), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<ResponseData> updatePassword(UpdatePasswordModel updatePasswordModel) {
+        String sql_update_password = "UPDATE gross.customers SET customer_password = ? WHERE  customer_account_number = ? and customer_password = ?";
+        int result;
+        try {
+            result = jdbcTemplate.update(sql_update_password,updatePasswordModel.getCustomer_new_password(),updatePasswordModel.getCustomer_account_number(),updatePasswordModel.getCustomer_current_password());
+            return new ResponseEntity(new ResponseData(0,null,"ok"), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
             return new ResponseEntity(new ResponseData(1,"Can't connect to database",null), HttpStatus.OK);

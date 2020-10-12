@@ -1,9 +1,6 @@
 package com.example.rest;
 
-import com.example.models.ResponseData;
-import com.example.models.ReviewModel;
-import com.example.models.TransferApprovedModel;
-import com.example.models.UserRequestModel;
+import com.example.models.*;
 import com.example.services.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +17,6 @@ public class GeneralController {
 
     @Autowired
     GeneralService generalService;
-
-
-    @GetMapping("/products")
-    public Map<String, Object> getProducts() {
-        return generalService.getProducts();
-    }
-
-    @GetMapping("/checkdb")
-    public List<Map<String, Object>> checkdb() {
-        return generalService.checkdb();
-    }
 
     //reviews
     @GetMapping("/reviews")
@@ -52,5 +38,17 @@ public class GeneralController {
     @PostMapping("/profile")
     public ResponseEntity<ResponseData> transferApproved(@RequestBody UserRequestModel userRequestModel) {
         return generalService.profile(userRequestModel);
+    }
+
+    // edit profile info
+    @PostMapping("/update-info")
+    public ResponseEntity<ResponseData> updateInfo(@RequestBody UpdateInfoModel updateInfoModel) {
+        return generalService.updateInfo(updateInfoModel);
+    }
+
+    // edit profile password
+    @PostMapping("/update-password")
+    public ResponseEntity<ResponseData> updatePassword(@RequestBody UpdatePasswordModel updatePasswordModel) {
+        return generalService.updatePassword(updatePasswordModel);
     }
 }

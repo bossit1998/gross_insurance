@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.io.IOException;
 
 @RestController
@@ -40,6 +41,8 @@ public class MailController {
                 "    </div> " +
                 "</body> " +
                 "</html> ");
+//        helper.addInline("logo", new File("C:\\Users\\Bossit\\java-getting-started\\src\\main\\resources\\gross-logo-light.png"));
+
         Mail mail = new Mail(from,subject,to,content);
 
         SendGrid sg = new SendGrid(appKey);

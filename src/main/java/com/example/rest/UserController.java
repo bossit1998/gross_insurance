@@ -100,4 +100,12 @@ public class UserController {
     public ResponseEntity<ResponseData> transferApproved(@RequestBody TransferApprovedModel transferApprovedModel) {
         return userService.transferApproved(transferApprovedModel);
     }
+
+    // approve the transfer by seller
+    @PostMapping("/fill-balance")
+    public ResponseEntity<ResponseData> fillBalance(@RequestBody TransferApprovedModel transferApprovedModel) {
+        return userService.transferApproved(transferApprovedModel);
+    }
+
+
 }
