@@ -49,7 +49,7 @@ public class UserService {
                     jdbcTemplate.update(userServiceQueries.sql_insert_email_verification_code, signUpEmailConfirmationModel.getCustomer_name(), signUpEmailConfirmationModel.getCustomer_surname(), signUpEmailConfirmationModel.getCustomer_email(), generated_code_for_customer);
 
                     System.out.println("Sending Email...");
-                    mailController.twilio(signUpEmailConfirmationModel, generated_code_for_customer);
+//                    mailController.twilio(signUpEmailConfirmationModel, generated_code_for_customer);
                     System.out.println("Done");
 
                     responseData.setStatus(0);
@@ -88,7 +88,6 @@ public class UserService {
                     } else {
                         String last_account_number = jdbcTemplate.queryForObject(userServiceQueries.sql_get_the_last_account_number, new Object[]{}, String.class);
 
-                        assert last_account_number != null;
                         int next_account_number = Integer.parseInt(last_account_number) + 1;
                         String next_account_number_in_string = Integer.toString(next_account_number);
                         jdbcTemplate.update(userServiceQueries.sql_update_email_verified, signUpEmailConfirmedModel.getCustomer_password(), next_account_number_in_string, now, customer_mail);
