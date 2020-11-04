@@ -2,7 +2,7 @@ package com.example.services;
 
 import com.example.Queries.UserServiceQueries;
 import com.example.models.*;
-import com.example.rest.MailController;
+//import com.example.rest.MailController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class UserService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final MailController mailController = new MailController();
+//    private final MailController mailController = new MailController();
 
     @Autowired
     GeneralService generalService;
